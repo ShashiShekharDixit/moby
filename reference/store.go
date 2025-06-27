@@ -30,8 +30,8 @@ type Store interface {
 	ReferencesByName(ref reference.Named) []Association
 	AddTag(ref reference.Named, id digest.Digest, force bool) error
 	AddDigest(ref reference.Canonical, id digest.Digest, force bool) error
-	Delete(ref reference.Named) (bool, error)
-	Get(ref reference.Named) (digest.Digest, error)
+	Remove(ref reference.Named) (bool, error)
+	lookup(ref reference.Named) (digest.Digest, error)
 }
 
 type refStore struct {
