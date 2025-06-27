@@ -36,13 +36,8 @@ type Store interface {
 
 type refStore struct {
 	mu sync.RWMutex
-	// jsonPath is the path to the file where the serialized tag data is
-	// stored.
 	jsonPath string
-	// Repositories is a map of repositories, indexed by name.
 	Repositories map[string]repository
-	// referencesByIDCache is a cache of references indexed by ID, to speed
-	// up References.
 	referencesByIDCache map[digest.Digest]map[string]reference.Named
 }
 
