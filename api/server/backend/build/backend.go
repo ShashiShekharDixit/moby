@@ -110,19 +110,28 @@ func (b *Backend) PruneCache(ctx context.Context, opts build.CachePruneOptions) 
 	return &build.CachePruneReport{SpaceReclaimed: uint64(buildCacheSize), CachesDeleted: cacheIDs}, nil
 }
 
-// Cancel cancels the build by ID
+// Cancel the build by ID
 func (b *Backend) Cancel(ctx context.Context, id string) error {
+	// Call the Cancel method of BuildKit with the context and ID
 	return b.buildkit.Cancel(ctx, id)
 }
 
+// squashBuild merges the image layers into a single layer.
 func squashBuild(build *builder.Result, imageComponent ImageComponent) (string, error) {
 	var fromID string
+
+	// Check if the build has a base image
 	if build.FromImage != nil {
-		fromID = build.FromImage.ImageID()
+		fromID = build.FromImage.ImageID() // Get the base image ID
 	}
+
+	// Squash the image layers
 	imageID, err := imageComponent.SquashImage(build.ImageID, fromID)
 	if err != nil {
+		// If squashing fails, wrap and return the error
 		return "", errors.Wrap(err, "error squashing image")
 	}
+
+	// Return the new squashed image ID
 	return imageID, nil
 }
